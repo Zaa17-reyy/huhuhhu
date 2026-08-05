@@ -1,0 +1,805 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.5">
+    <title>Semangat untuk Sayangku ☀️💛</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <style>
+        /* ===== style.css (digabung) ===== */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Quicksand', sans-serif;
+            min-height: 100vh;
+            background: #fff7e6;
+            overflow-x: hidden;
+        }
+
+        /* ===== SCREEN ===== */
+        .screen {
+            display: none;
+            min-height: 100vh;
+            width: 100%;
+            position: relative;
+            animation: fadeIn 0.8s ease;
+        }
+        .screen.active {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        @keyframes fadeIn {
+            0% {
+                opacity: 0;
+                transform: scale(0.97);
+            }
+            100% {
+                opacity: 1;
+                transform: scale(1);
+            }
+        }
+
+        /* ===== GAME SCREEN ===== */
+        #gameScreen {
+            background: linear-gradient(145deg, #fde68a, #fbbf24, #fcd34d, #f59e0b);
+            background-size: 400% 400%;
+            animation: gradientMove 12s ease infinite;
+            padding: 20px;
+        }
+
+        @keyframes gradientMove {
+            0% {
+                background-position: 0% 50%;
+            }
+            50% {
+                background-position: 100% 50%;
+            }
+            100% {
+                background-position: 0% 50%;
+            }
+        }
+
+        .game-container {
+            max-width: 550px;
+            width: 100%;
+            background: rgba(255, 255, 255, 0.75);
+            backdrop-filter: blur(10px);
+            padding: 30px 24px 40px;
+            border-radius: 60px 60px 40px 40px;
+            box-shadow: 0 30px 50px rgba(180, 120, 20, 0.2);
+            text-align: center;
+            border: 2px solid #ffd966;
+        }
+
+        .game-title {
+            font-size: 2rem;
+            font-weight: 700;
+            color: #7c4d0e;
+            margin-bottom: 6px;
+        }
+        .game-sub {
+            font-size: 1.1rem;
+            color: #7c5c1a;
+            margin-bottom: 24px;
+            font-weight: 500;
+        }
+
+        .flower-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 14px;
+            margin: 16px 0 20px;
+        }
+
+        .flower-btn {
+            aspect-ratio: 1 / 1;
+            border: none;
+            background: #fff3c9;
+            border-radius: 30px;
+            font-size: 2.2rem;
+            box-shadow: 0 6px 0 #dbaa2b, 0 8px 20px rgba(0, 0, 0, 0.08);
+            cursor: pointer;
+            transition: all 0.1s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: 2px solid #fbbf24;
+        }
+        .flower-btn:hover {
+            transform: scale(0.96);
+            background: #ffedb0;
+        }
+        .flower-btn:active {
+            transform: translateY(5px);
+            box-shadow: 0 2px 0 #dbaa2b;
+        }
+        .flower-btn.reveal {
+            background: #fcd34d;
+            transform: scale(1.02);
+        }
+
+        .game-feedback {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: #7c4d0e;
+            min-height: 2.8rem;
+            margin: 10px 0 6px;
+        }
+
+        .btn-open-message {
+            background: #fbbf24;
+            border: none;
+            padding: 14px 36px;
+            border-radius: 60px;
+            font-size: 1.3rem;
+            font-weight: 700;
+            color: #4d2e0a;
+            box-shadow: 0 6px 0 #d48f1a, 0 8px 20px rgba(251, 191, 36, 0.4);
+            cursor: pointer;
+            transition: all 0.15s;
+            margin-top: 10px;
+            display: inline-block;
+        }
+        .btn-open-message:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 0 #d48f1a, 0 0 30px #fbbf24cc;
+        }
+        .btn-open-message:active {
+            transform: translateY(5px);
+            box-shadow: 0 2px 0 #d48f1a;
+        }
+        .hidden {
+            display: none !important;
+        }
+
+        /* ===== MAIN SCREEN ===== */
+        #mainScreen {
+            background: linear-gradient(145deg, #fde68a, #fbbf24, #fcd34d, #f59e0b);
+            background-size: 400% 400%;
+            animation: gradientMove 18s ease infinite;
+            padding: 20px;
+            min-height: 100vh;
+        }
+
+        .main-wrapper {
+            position: relative;
+            max-width: 900px;
+            width: 100%;
+            background: rgba(255, 255, 255, 0.55);
+            backdrop-filter: blur(10px);
+            border-radius: 60px 60px 40px 40px;
+            padding: 30px 28px 20px;
+            box-shadow: 0 30px 60px rgba(180, 120, 20, 0.2);
+            border: 1px solid rgba(255, 215, 0, 0.3);
+            animation: fadeIn 1.4s ease;
+            overflow: hidden;
+        }
+
+        /* Canvas partikel */
+        #particleCanvas {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 1;
+            border-radius: inherit;
+        }
+
+        .main-content {
+            position: relative;
+            z-index: 2;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+            gap: 18px;
+        }
+
+        /* Matahari tersenyum */
+        .sun-smile {
+            position: absolute;
+            top: 12px;
+            right: 20px;
+            font-size: 3.2rem;
+            z-index: 5;
+            animation: floatSun 4s ease-in-out infinite;
+            filter: drop-shadow(0 0 20px #fbbf24);
+        }
+        @keyframes floatSun {
+            0%,
+            100% {
+                transform: translateY(0) rotate(0deg);
+            }
+            50% {
+                transform: translateY(-10px) rotate(8deg);
+            }
+        }
+
+        .main-title {
+            font-size: clamp(1.8rem, 7vw, 3.2rem);
+            font-weight: 700;
+            color: #7c4d0e;
+            text-shadow: 0 4px 15px rgba(255, 200, 0, 0.3);
+            min-height: 4rem;
+            border-right: 3px solid #fbbf24;
+            padding-right: 8px;
+            display: inline-block;
+            white-space: nowrap;
+            overflow: hidden;
+            animation: blinkCursor 0.7s step-end infinite;
+            width: fit-content;
+            margin: 0 auto;
+        }
+        @keyframes blinkCursor {
+            0%,
+            100% {
+                border-color: #fbbf24;
+            }
+            50% {
+                border-color: transparent;
+            }
+        }
+
+        .message-box {
+            background: rgba(255, 248, 220, 0.7);
+            backdrop-filter: blur(4px);
+            padding: 22px 24px;
+            border-radius: 32px;
+            border-left: 6px solid #fbbf24;
+            box-shadow: 0 6px 20px rgba(200, 150, 20, 0.08);
+            max-width: 720px;
+            width: 100%;
+            animation: fadeInMessage 2s ease;
+        }
+        @keyframes fadeInMessage {
+            0% {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            100% {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        .main-message {
+            font-size: clamp(0.95rem, 2.2vw, 1.2rem);
+            line-height: 1.7;
+            color: #4d3a1a;
+            font-weight: 400;
+        }
+
+        .quote-box {
+            background: rgba(255, 215, 0, 0.2);
+            padding: 12px 24px;
+            border-radius: 60px;
+            font-size: clamp(1rem, 2vw, 1.2rem);
+            font-weight: 600;
+            color: #7c4d0e;
+            backdrop-filter: blur(2px);
+            border: 1px solid #fbbf24aa;
+            min-height: 3.5rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: fit-content;
+            max-width: 90%;
+            transition: opacity 0.6s;
+        }
+
+        .btn-peluk {
+            background: #fbbf24;
+            border: none;
+            padding: 16px 38px;
+            border-radius: 80px;
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: #4d2e0a;
+            box-shadow: 0 8px 0 #d48f1a, 0 12px 30px rgba(251, 191, 36, 0.5);
+            cursor: pointer;
+            transition: all 0.15s ease;
+            border: 1px solid #ffd966;
+            margin-top: 6px;
+            position: relative;
+            z-index: 3;
+        }
+        .btn-peluk:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 0 #d48f1a, 0 0 40px #fbbf24cc, 0 0 80px #fbbf2480;
+            background: #fcd34d;
+        }
+        .btn-peluk:active {
+            transform: translateY(6px);
+            box-shadow: 0 4px 0 #d48f1a;
+        }
+
+        .main-footer {
+            margin-top: 28px;
+            padding-top: 16px;
+            border-top: 2px dashed #fbbf2480;
+            text-align: center;
+            font-size: 0.9rem;
+            color: #5c451a;
+            font-weight: 500;
+            position: relative;
+            z-index: 3;
+        }
+
+        /* ===== MODAL ===== */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.25);
+            backdrop-filter: blur(6px);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 999;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.3s ease;
+        }
+        .modal-overlay.active {
+            opacity: 1;
+            pointer-events: all;
+        }
+        .modal-card {
+            background: #fffbe6;
+            max-width: 460px;
+            width: 92%;
+            padding: 30px 28px 24px;
+            border-radius: 48px;
+            text-align: center;
+            box-shadow: 0 40px 80px rgba(0, 0, 0, 0.2);
+            border: 2px solid #fbbf24;
+            transform: scale(0.9);
+            transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+        .modal-overlay.active .modal-card {
+            transform: scale(1);
+        }
+        .modal-card p {
+            font-size: 1.15rem;
+            line-height: 1.6;
+            color: #3d2e0e;
+            font-weight: 500;
+            margin-bottom: 22px;
+        }
+        .modal-close {
+            background: #fbbf24;
+            border: none;
+            padding: 12px 32px;
+            border-radius: 60px;
+            font-weight: 700;
+            font-size: 1.1rem;
+            color: #3d2e0e;
+            box-shadow: 0 4px 0 #c9921a;
+            cursor: pointer;
+            transition: 0.1s;
+        }
+        .modal-close:hover {
+            background: #fcd34d;
+            transform: scale(0.97);
+        }
+        .modal-close:active {
+            transform: translateY(4px);
+            box-shadow: 0 0px 0 #c9921a;
+        }
+
+        /* ===== RESPONSIVE ===== */
+        @media (max-width: 640px) {
+            .game-container {
+                padding: 24px 16px;
+            }
+            .flower-grid {
+                gap: 10px;
+            }
+            .flower-btn {
+                font-size: 1.8rem;
+                border-radius: 20px;
+            }
+            .main-wrapper {
+                padding: 20px 14px;
+            }
+            .main-title {
+                white-space: normal;
+                border-right: none;
+                animation: none;
+            }
+            .btn-peluk {
+                font-size: 1.2rem;
+                padding: 14px 28px;
+                width: 100%;
+            }
+            .message-box {
+                padding: 16px;
+            }
+            .sun-smile {
+                font-size: 2.4rem;
+                top: 8px;
+                right: 12px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- ===== MINI GAME ===== -->
+    <div id="gameScreen" class="screen active">
+        <div class="game-container">
+            <h2 class="game-title">Selesaikan Misi Dulu Yuk! 🌼</h2>
+            <p class="game-sub">Temukan bunga yang menyimpan hati 💛</p>
+            <div class="flower-grid" id="flowerGrid"></div>
+            <p class="game-feedback" id="gameFeedback">Klik bunga yang kamu pilih!</p>
+            <button class="btn-open-message hidden" id="btnOpenMessage">Buka Pesan Rahasia ✨</button>
+        </div>
+    </div>
+
+    <!-- ===== HALAMAN UTAMA ===== -->
+    <div id="mainScreen" class="screen">
+        <div class="main-wrapper">
+            <!-- Background canvas untuk partikel -->
+            <canvas id="particleCanvas"></canvas>
+
+            <!-- Matahari tersenyum -->
+            <div class="sun-smile">☀️</div>
+
+            <div class="main-content">
+                <h1 class="main-title" id="typingTitle">Semangat Ya, Sayangku ☀️💛</h1>
+
+                <div class="message-box">
+                    <p class="main-message">
+                        Sayang, kalau hari ini terasa melelahkan, nggak apa-apa kok. Semua orang punya hari yang berat. Aku cuma mau ngingetin kalau kamu hebat, kuat, dan sudah berusaha sejauh ini. Jangan terlalu keras sama diri sendiri ya. Kalau capek, istirahat sebentar, lalu lanjut lagi pelan-pelan. Aku percaya kamu bisa melewati semuanya. Semoga hari ini membawa banyak hal baik, senyum, dan semangat baru. Jangan lupa makan, minum yang cukup, dan jaga kesehatan. Terima kasih sudah selalu berjuang. Aku akan selalu mendukungmu dari jauh. Kamu pasti bisa! 💛☀️
+                    </p>
+                </div>
+
+                <div class="quote-box" id="quoteBox">✨ "Kamu lebih kuat dari yang kamu kira."</div>
+
+                <button class="btn-peluk" id="btnPeluk">Peluk Virtual 🤗💛</button>
+            </div>
+
+            <footer class="main-footer">
+                <p>Dibuat dengan penuh semangat dan doa agar kamu selalu tersenyum. ☀️💛</p>
+            </footer>
+        </div>
+    </div>
+
+    <!-- ===== MODAL / POPUP ===== -->
+    <div class="modal-overlay" id="modalOverlay">
+        <div class="modal-card">
+            <p>Peluk virtual berhasil dikirim! 🤗💛 Semoga harimu jadi lebih ringan. Tetap semangat ya, aku selalu mendukungmu.</p>
+            <button class="modal-close" id="modalClose">💛 Baik, Semangat!</button>
+        </div>
+    </div>
+
+    <!-- ===== AUDIO (opsional) ===== -->
+    <audio id="bgMusic" loop preload="auto">
+        <source src="music.mp3" type="audio/mpeg">
+        <!-- Ganti src dengan file musikmu -->
+    </audio>
+
+    <script>
+        // ===== script.js (digabung) =====
+
+        // -------------------- MINI GAME --------------------
+        const gameScreen = document.getElementById('gameScreen');
+        const mainScreen = document.getElementById('mainScreen');
+        const flowerGrid = document.getElementById('flowerGrid');
+        const gameFeedback = document.getElementById('gameFeedback');
+        const btnOpenMessage = document.getElementById('btnOpenMessage');
+
+        let flowerCount = 8;
+        let heartIndex = Math.floor(Math.random() * flowerCount);
+        let gameCompleted = false;
+
+        // Buat bunga
+        function buildGame() {
+            flowerGrid.innerHTML = '';
+            heartIndex = Math.floor(Math.random() * flowerCount);
+            gameCompleted = false;
+            gameFeedback.textContent = 'Klik bunga yang kamu pilih!';
+            btnOpenMessage.classList.add('hidden');
+
+            for (let i = 0; i < flowerCount; i++) {
+                const btn = document.createElement('button');
+                btn.className = 'flower-btn';
+                btn.dataset.index = i;
+                btn.textContent = '🌻';
+                btn.addEventListener('click', () => handleFlowerClick(i, btn));
+                flowerGrid.appendChild(btn);
+            }
+        }
+
+        function handleFlowerClick(index, btn) {
+            if (gameCompleted) return;
+
+            if (index === heartIndex) {
+                // Benar!
+                btn.textContent = '💛';
+                btn.classList.add('reveal');
+                gameFeedback.textContent = '🎉 Yay! Ketemu! Kamu hebat! 💛';
+                gameCompleted = true;
+                btnOpenMessage.classList.remove('hidden');
+                // Confetti sederhana
+                launchConfetti(20);
+            } else {
+                // Salah
+                const msgs = [
+                    'Hihi, belum ketemu. Coba lagi ya! 🌻',
+                    'Sedikit lagi! Semangat! 💛',
+                    'Aduh, hampir! Coba yang lain! 🌼',
+                    'Panas-panas? Coba lagi! ☀️'
+                ];
+                gameFeedback.textContent = msgs[Math.floor(Math.random() * msgs.length)];
+                btn.style.transform = 'scale(0.85)';
+                setTimeout(() => btn.style.transform = '', 200);
+            }
+        }
+
+        // Confetti sederhana untuk game
+        function launchConfetti(count = 30) {
+            const colors = ['#fbbf24', '#fcd34d', '#ffd966', '#fff3b0'];
+            for (let i = 0; i < count; i++) {
+                const el = document.createElement('div');
+                el.textContent = ['✨', '💛', '🌟', '⭐', '🌸'][Math.floor(Math.random() * 5)];
+                el.style.cssText = `
+                position: fixed; pointer-events: none; z-index: 9999;
+                font-size: ${Math.random() * 20 + 16}px;
+                left: ${Math.random() * 100}vw;
+                top: -20px;
+                opacity: 1;
+                transition: all ${Math.random() * 2 + 1}s ease-out;
+              `;
+                document.body.appendChild(el);
+                requestAnimationFrame(() => {
+                    el.style.transform = `translateY(${window.innerHeight + 60}px) rotate(${Math.random() * 720}deg)`;
+                    el.style.opacity = '0';
+                });
+                setTimeout(() => el.remove(), 3000);
+            }
+        }
+
+        // Buka pesan rahasia -> transisi ke halaman utama
+        btnOpenMessage.addEventListener('click', () => {
+            // Animasi transisi
+            gameScreen.style.transition = 'opacity 0.6s, transform 0.6s';
+            gameScreen.style.opacity = '0';
+            gameScreen.style.transform = 'scale(0.95)';
+
+            setTimeout(() => {
+                gameScreen.classList.remove('active');
+                mainScreen.classList.add('active');
+                // Jalankan efek di halaman utama
+                initMainPage();
+                // Putar musik
+                const audio = document.getElementById('bgMusic');
+                audio.volume = 0.4;
+                audio.play().catch(e => console.log('Audio tidak bisa diputar otomatis'));
+            }, 600);
+        });
+
+        // -------------------- HALAMAN UTAMA --------------------
+        let mainInitialized = false;
+
+        function initMainPage() {
+            if (mainInitialized) return;
+            mainInitialized = true;
+
+            // Typing effect
+            const titleEl = document.getElementById('typingTitle');
+            const fullTitle = "Semangat Ya, Sayangku ☀️💛";
+            let idx = 0;
+
+            function typeTitle() {
+                if (idx < fullTitle.length) {
+                    titleEl.textContent = fullTitle.substring(0, idx + 1);
+                    idx++;
+                    setTimeout(typeTitle, 55);
+                }
+            }
+            setTimeout(typeTitle, 400);
+
+            // Quotes
+            const quotes = [
+                '✨ "Kamu lebih kuat dari yang kamu kira."',
+                '☀️ "Setiap pagi adalah awal yang baru."',
+                '💛 "Kamu berharga, jangan lupa itu."',
+                '🌟 "Kesulitan adalah batu loncatan."',
+                '🌸 "Hari ini penuh dengan kemungkinan."',
+                '🌻 "Tersenyumlah, kamu cantik."',
+                '🌈 "Pelangi hadir setelah hujan."'
+            ];
+            let qIdx = 0;
+            const quoteBox = document.getElementById('quoteBox');
+
+            function changeQuote() {
+                qIdx = (qIdx + 1) % quotes.length;
+                quoteBox.style.opacity = '0.3';
+                setTimeout(() => {
+                    quoteBox.textContent = quotes[qIdx];
+                    quoteBox.style.opacity = '1';
+                }, 200);
+            }
+            setInterval(changeQuote, 10000);
+            quoteBox.textContent = quotes[0];
+
+            // Tombol peluk + modal
+            const btnPeluk = document.getElementById('btnPeluk');
+            const modalOverlay = document.getElementById('modalOverlay');
+            const modalClose = document.getElementById('modalClose');
+
+            btnPeluk.addEventListener('click', () => {
+                modalOverlay.classList.add('active');
+                // ledakan hati & confetti
+                burstHearts();
+                launchConfetti(50);
+                // audio tetap diputar
+                const audio = document.getElementById('bgMusic');
+                if (audio.paused) audio.play().catch(() => {});
+            });
+
+            modalClose.addEventListener('click', () => modalOverlay.classList.remove('active'));
+            modalOverlay.addEventListener('click', (e) => {
+                if (e.target === modalOverlay) modalOverlay.classList.remove('active');
+            });
+
+            // Partikel di halaman utama (Canvas)
+            initParticles();
+
+            // Efek kilau kursor
+            initCursorGlow();
+        }
+
+        // -------------------- PARTIKEL CANVAS (hal utama) --------------------
+        function initParticles() {
+            const canvas = document.getElementById('particleCanvas');
+            const ctx = canvas.getContext('2d');
+            let width, height, particles = [];
+
+            function resize() {
+                const rect = canvas.parentElement.getBoundingClientRect();
+                canvas.width = rect.width;
+                canvas.height = rect.height;
+                width = canvas.width;
+                height = canvas.height;
+            }
+            window.addEventListener('resize', resize);
+            resize();
+
+            class Particle {
+                constructor() { this.reset(); }
+                reset() {
+                    this.x = Math.random() * width;
+                    this.y = Math.random() * height - 10;
+                    this.size = Math.random() * 10 + 4;
+                    this.speedY = Math.random() * 0.5 + 0.2;
+                    this.speedX = (Math.random() - 0.5) * 0.3;
+                    this.opacity = Math.random() * 0.5 + 0.3;
+                    this.type = Math.floor(Math.random() * 3);
+                    this.phase = Math.random() * 6.28;
+                }
+                update() {
+                    this.y -= this.speedY;
+                    this.x += this.speedX + Math.sin(this.phase) * 0.1;
+                    this.phase += 0.02;
+                    if (this.y < -20) { this.y = height + 10;
+                        this.x = Math.random() * width; }
+                    if (this.x < -10) this.x = width + 10;
+                    if (this.x > width + 10) this.x = -10;
+                }
+                draw() {
+                    ctx.save();
+                    ctx.globalAlpha = this.opacity;
+                    ctx.fillStyle = '#fbbf24';
+                    ctx.shadowColor = '#fcd34d';
+                    ctx.shadowBlur = 12;
+                    const s = this.size * 0.5;
+                    if (this.type === 0) drawStar(ctx, this.x, this.y, 5, s, s * 0.4);
+                    else if (this.type === 1) drawHeart(ctx, this.x, this.y, s);
+                    else {
+                        ctx.shadowBlur = 25;
+                        ctx.beginPath();
+                        ctx.arc(this.x, this.y, s * 0.6, 0, Math.PI * 2);
+                        ctx.fill();
+                    }
+                    ctx.restore();
+                }
+            }
+
+            function drawStar(ctx, cx, cy, spikes, outerR, innerR) {
+                let rot = -Math.PI / 2;
+                const step = Math.PI / spikes;
+                ctx.beginPath();
+                for (let i = 0; i < spikes * 2; i++) {
+                    const r = i % 2 === 0 ? outerR : innerR;
+                    const x = cx + Math.cos(rot + i * step) * r;
+                    const y = cy + Math.sin(rot + i * step) * r;
+                    i === 0 ? ctx.moveTo(x, y) : ctx.lineTo(x, y);
+                }
+                ctx.closePath();
+                ctx.fill();
+            }
+
+            function drawHeart(ctx, cx, cy, size) {
+                ctx.beginPath();
+                ctx.moveTo(cx, cy + size * 0.3);
+                ctx.bezierCurveTo(cx - size * 0.7, cy - size * 0.3, cx - size * 0.4, cy - size * 0.8, cx, cy - size * 0.5);
+                ctx.bezierCurveTo(cx + size * 0.4, cy - size * 0.8, cx + size * 0.7, cy - size * 0.3, cx, cy + size * 0.3);
+                ctx.fill();
+            }
+
+            function init(count = 50) {
+                particles = [];
+                for (let i = 0; i < count; i++) particles.push(new Particle());
+            }
+            init(55);
+
+            function animate() {
+                ctx.clearRect(0, 0, width, height);
+                particles.forEach(p => { p.update();
+                    p.draw(); });
+                requestAnimationFrame(animate);
+            }
+            animate();
+
+            // Fungsi burst untuk tombol peluk
+            window.burstHearts = function() {
+                const count = 40;
+                for (let i = 0; i < count; i++) {
+                    const p = new Particle();
+                    p.x = width / 2 + (Math.random() - 0.5) * 300;
+                    p.y = height / 2 + (Math.random() - 0.5) * 200;
+                    p.size = Math.random() * 18 + 8;
+                    p.speedY = (Math.random() - 0.5) * 5;
+                    p.speedX = (Math.random() - 0.5) * 5;
+                    p.opacity = Math.random() * 0.8 + 0.4;
+                    p.type = Math.floor(Math.random() * 2);
+                    particles.push(p);
+                }
+                if (particles.length > 200) particles.splice(0, particles.length - 160);
+            };
+        }
+
+        // -------------------- KURSOR KILAU --------------------
+        function initCursorGlow() {
+            const glow = document.createElement('div');
+            glow.style.cssText = `
+              position: fixed; pointer-events: none; width: 24px; height: 24px;
+              border-radius: 50%; background: radial-gradient(circle, #fbbf24aa, transparent 70%);
+              transform: translate(-50%,-50%);
+              z-index: 9999; transition: opacity 0.2s; opacity: 0;
+            `;
+            document.body.appendChild(glow);
+
+            document.addEventListener('mousemove', (e) => {
+                glow.style.left = e.clientX + 'px';
+                glow.style.top = e.clientY + 'px';
+                glow.style.opacity = '0.8';
+            });
+            document.addEventListener('mouseleave', () => { glow.style.opacity = '0'; });
+            document.addEventListener('touchmove', (e) => {
+                const t = e.touches[0];
+                if (t) { glow.style.left = t.clientX + 'px';
+                    glow.style.top = t.clientY + 'px';
+                    glow.style.opacity = '0.6'; }
+            });
+            document.addEventListener('touchend', () => { glow.style.opacity = '0'; });
+        }
+
+        // -------------------- START --------------------
+        buildGame();
+    </script>
+</body>
+</html>
